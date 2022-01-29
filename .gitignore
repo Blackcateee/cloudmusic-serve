@@ -1,0 +1,13 @@
+.idea
+
+/CloudMusicServe/admin-service/target/
+/CloudMusicServe/admin-service/admin-service.iml
+/CloudMusicServe/gateway/gateway.iml
+/CloudMusicServe/song-service/target/
+/CloudMusicServe/song-service/song-service.iml
+/CloudMusicServe/user-service/target/
+/CloudMusicServe/user-service/user-service.iml
+/CloudMusicServe/cloudmusicserve.iml
+/CloudMusicServe/video-service/video-service.iml
+/CloudMusicServe/video-service/target/
+/CloudMusicServe/feign-api/feign-api.iml

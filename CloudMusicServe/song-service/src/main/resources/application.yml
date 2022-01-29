@@ -1,0 +1,13 @@
+server:
+  port: 8083
+spring:
+  application:
+    name: songservice
+  cloud:
+    nacos:
+      server-addr: 121.40.137.246:8849
+  datasource:
+    url: jdbc:mysql://121.137.40.246:3306/course_design?useSSL=false&&allowPublicKeyRetrieval=true
+    username: root
+    password: root
+    driver-class-name: com.mysql.jdbc.Driver

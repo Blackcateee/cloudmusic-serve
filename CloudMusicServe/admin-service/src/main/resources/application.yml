@@ -1,0 +1,14 @@
+serve:
+  port: 8084
+spring:
+  datasource:
+    url: jdbc:mysql://121.137.40.246:3306/course_design?useSSL=false&&allowPublicKeyRetrieval=true
+    username: root
+    password: root
+    driver-class-name: com.mysql.jdbc.Driver
+  application:
+    name: adminservice
+  cloud:
+    nacos:
+      server-addr: 121.40.137.246:8849
+
