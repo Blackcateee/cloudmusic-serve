@@ -11,3 +11,6 @@
 /CloudMusicServe/video-service/video-service.iml
 /CloudMusicServe/video-service/target/
 /CloudMusicServe/feign-api/feign-api.iml
+
+gen
+out
