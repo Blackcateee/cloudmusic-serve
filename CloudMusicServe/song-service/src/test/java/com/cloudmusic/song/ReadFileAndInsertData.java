@@ -37,6 +37,7 @@ public class ReadFileAndInsertData {
                 StringBuilder jsonString = new StringBuilder();
                 jsonString.append(line);
                 if (line.contains("}")) {
+                    //删除json对象最后的逗号
                     jsonString.replace(jsonString.length() - 1, jsonString.length(), "");
                     Song song = JSON.parseObject(jsonString.toString(), Song.class);
                     List<Long> strings = new ArrayList<>();
@@ -44,10 +45,11 @@ public class ReadFileAndInsertData {
                     for (Song song1 : songs) {
                         strings.add(song1.getSongId());
                     }
-                    if(strings.contains(song.getSongId())) {
+                    if (strings.contains(song.getSongId())) {
                         songMapper.updateById(song);
+                    } else {
+                        songMapper.insert(song);
                     }
-                    songMapper.insert(song);
                     jsonString.setLength(0);
                 }
             }
@@ -67,9 +69,19 @@ public class ReadFileAndInsertData {
                 StringBuilder jsonString = new StringBuilder();
                 jsonString.append(line);
                 if (line.contains("}")) {
+                    //删除json对象最后的逗号
                     jsonString.replace(jsonString.length() - 1, jsonString.length(), "");
                     SongSheet songSheet = JSON.parseObject(jsonString.toString(), SongSheet.class);
-                    songSheetMapper.insert(songSheet);
+                    List<Long> strings = new ArrayList<>();
+                    final List<SongSheet> songSheets = songSheetMapper.selectList(null);
+                    for (SongSheet songSheet1 : songSheets) {
+                        strings.add(songSheet1.getListId());
+                    }
+                    if (strings.contains(songSheet.getListId())) {
+                        songSheetMapper.updateById(songSheet);
+                    } else {
+                        songSheetMapper.insert(songSheet);
+                    }
                     jsonString.setLength(0);
                 }
             }

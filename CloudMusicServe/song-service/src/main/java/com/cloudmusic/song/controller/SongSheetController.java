@@ -1,10 +1,12 @@
 package com.cloudmusic.song.controller;
 
 import com.cloudmusic.song.entity.PageInfo;
+import com.cloudmusic.song.entity.Song;
 import com.cloudmusic.song.entity.SongSheet;
 import com.cloudmusic.song.service.SongSheetService;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -34,4 +36,9 @@ public class SongSheetController {
         map.put("num", service.selectSongSheetAll(pageInfo).getTotal());
         return map;
     }
-}
+
+    @RequestMapping("/song/songListInSheet")
+    public HashMap<String, Object> selectSongListInSheet(@RequestParam("listId") String listId) {
+        return service.selectSongs(listId);
+    }
+ }
