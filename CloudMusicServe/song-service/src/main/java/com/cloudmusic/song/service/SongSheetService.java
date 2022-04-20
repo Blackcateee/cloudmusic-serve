@@ -23,6 +23,7 @@ public class SongSheetService {
     @Autowired
     private SongService songService;
 
+    //根据歌单播放量排序返回
     public List<SongSheet> selectSongSheetByAmount() {
         QueryWrapper<SongSheet> queryWrapper = new QueryWrapper<>();
         queryWrapper.orderByAsc("list_amount");

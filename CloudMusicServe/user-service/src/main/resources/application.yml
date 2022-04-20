@@ -5,9 +5,30 @@ spring:
     name: userservice
   cloud:
     nacos:
-      server-addr: 121.40.137.246:8849
+      server-addr: localhost:8848
+  userservice:
+    ribbon:
+      NFLoadBalancerRuleClassName: com.alibaba.cloud.nacos.ribbon.NacosRule
+      #    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule #负载均衡策略
   datasource:
-    url: jdbc:mysql://121.137.40.246:3306/course_design?useSSL=false&&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://localhost:3306/user_db?useSSL=false&&allowPublicKeyRetrieval=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
     username: root
     password: root
     driver-class-name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    #   Druid数据源配置
+    druid:
+      #初始化连接池的连接数量 大小，最小，最大
+      initialSize: 5
+      minIdle: 5
+      maxActive: 20
+      #配置获取连接等待超时的时间
+      maxWait: 60000
+      #配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      timeBetweenEvictionRunsMillis: 60000
+      # 配置一个连接在池中最小生存的时间，单位是毫秒
+      minEvictableIdleTimeMillis: 300000
+      validationQuery: SELECT 1 FROM DUAL
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
