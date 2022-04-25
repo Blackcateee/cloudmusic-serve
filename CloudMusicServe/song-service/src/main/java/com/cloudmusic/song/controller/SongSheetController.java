@@ -1,8 +1,10 @@
 package com.cloudmusic.song.controller;
 
 import com.cloudmusic.feign.entity.QueryInfo;
+import com.cloudmusic.feign.entity.SongSheetVO;
 import com.cloudmusic.feign.entity.SongVO;
 import com.cloudmusic.song.entity.PageInfo;
+import com.cloudmusic.song.entity.ResultVO;
 import com.cloudmusic.song.entity.Song;
 import com.cloudmusic.song.entity.SongSheet;
 import com.cloudmusic.song.service.SongService;
@@ -54,6 +56,31 @@ public class SongSheetController {
             return null;
         }
         return songService.selectDefaultSong(queryInfo);
+    }
+
+    @RequestMapping("/song/addSongSheet")
+    public Long addSongSheet(@RequestParam String songSheetName, @RequestParam String userName) {
+        return service.addSongSheet(songSheetName, userName);
+    }
+
+    @RequestMapping("/song/getUserSongSheet")
+    public List<SongSheet> getUserSongSheet(@RequestParam("songSheetList") String songSheetList) {
+        return service.getUserSongSheet(songSheetList);
+    }
+
+    @RequestMapping("/song/deleteSongSheet")
+    public boolean deleteSongSheet(@RequestParam String songSheetId) {
+        return service.deleteSongSheet(songSheetId);
+    }
+
+    @RequestMapping("/song/selectUserSongSheet")
+    public List<SongSheetVO> selectUserSongSheet(@RequestParam("songSheetIdList") List<String> songSheetIdList) {
+        return service.selectUserCollection(songSheetIdList);
+    }
+
+    @RequestMapping("/song/addSongIntoSongSheet")
+    public ResultVO addSongIntoSongSheet(@RequestParam("songSheetId") String songSheetId, @RequestParam("songId") String songId) {
+        return service.addSongIntoSongSheet(songSheetId, songId);
     }
  }
 

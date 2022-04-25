@@ -1,20 +1,10 @@
-package com.cloudmusic.song.entity;
+package com.cloudmusic.feign.entity;
 
-import com.alibaba.fastjson.annotation.JSONField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
-/**
- * 歌单实体类
- */
 @Data
-@TableName("t_lists")
-public class SongSheet {
+public class SongSheetVO {
     //歌单id
-    @TableId
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long listId;
     //歌单链接
     private String listLink;

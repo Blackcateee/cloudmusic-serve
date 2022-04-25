@@ -3,6 +3,7 @@ package com.cloudmusic.song.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 /**
@@ -13,6 +14,7 @@ import lombok.Data;
 public class Song {
     //id
     @TableId
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long songId;
     //歌曲链接
     private String songLink;

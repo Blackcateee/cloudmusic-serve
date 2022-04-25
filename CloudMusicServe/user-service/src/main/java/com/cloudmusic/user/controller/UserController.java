@@ -34,4 +34,19 @@ public class UserController {
     public User getUserInfo(String userName) {
         return userService.getUserInfo(userName);
     }
+
+    @RequestMapping("/user/addSongSheet")
+    public String addSongSheet(@RequestParam("songSheetName") String songSheetName, @RequestParam("userName") String userName) {
+        return userService.addSongSheet(songSheetName, userName);
+    }
+
+    @RequestMapping("/user/deleteSongSheet")
+    public String deleteSongSheet(@RequestParam("userName") String username, @RequestParam("songSheetId") String songSheetId) {
+        return userService.deleteSongSheet(username, songSheetId);
+    }
+
+    @RequestMapping("/user/addUserCollection")
+    public ResultVO addUserCollection(@RequestParam("userName") String username, @RequestParam("songSheetId") String songSheetId) {
+        return userService.addUserCollection(username, songSheetId);
+    }
 }

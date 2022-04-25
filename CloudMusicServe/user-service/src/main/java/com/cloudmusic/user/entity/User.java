@@ -3,6 +3,7 @@ package com.cloudmusic.user.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.apache.commons.codec.language.bm.Rule;
 
@@ -11,6 +12,7 @@ import org.apache.commons.codec.language.bm.Rule;
 public class User {
     //id
     @TableId
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long userId;
     //用户权限
     private int userAccess;
@@ -31,4 +33,7 @@ public class User {
     //用户的歌单
     @TableField("user_songSheet")
     private String userSongSheet;
+    //用户昵称
+    @TableField("user_nickName")
+    private String userNickname;
 }
