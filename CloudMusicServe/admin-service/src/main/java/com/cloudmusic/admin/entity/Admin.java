@@ -1,6 +1,5 @@
-package com.cloudmusic.user.entity;
+package com.cloudmusic.admin.entity;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -9,22 +8,20 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-@TableName("t_comment")
-public class Comment {
+@TableName("t_admin")
+public class Admin {
+
     //id
     @TableId
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long id;
-    //用户name
-    private String userName;
-    //歌单id
-    @TableField("songSheet_id")
-    private Long songSheetId;
-    //歌曲id
-    private Long songId;
-    //评论内容
-    private String comment;
-    //添加时间
+    //账号
+    private String account;
+    //密码
+    private String password;
+    //权限
+    private int access;
+    //操作时间
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date insertTime;
 }

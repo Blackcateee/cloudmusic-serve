@@ -1,5 +1,6 @@
 package com.cloudmusic.admin;
 
+import com.cloudmusic.feign.clients.SongClients;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -8,8 +9,8 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@EnableFeignClients
 @Slf4j
+@EnableFeignClients(clients = SongClients.class)
 public class AdminServiceApplication {
     public static void main(String[] args) {
         SpringApplication.run(AdminServiceApplication.class, args);

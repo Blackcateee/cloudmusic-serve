@@ -1,8 +1,10 @@
 package com.cloudmusic.song;
 
 import com.alibaba.fastjson.JSON;
+import com.cloudmusic.song.entity.Singer;
 import com.cloudmusic.song.entity.Song;
 import com.cloudmusic.song.entity.SongSheet;
+import com.cloudmusic.song.mapper.SingerMapper;
 import com.cloudmusic.song.mapper.SongMapper;
 import com.cloudmusic.song.mapper.SongSheetMapper;
 import org.junit.Test;
@@ -15,6 +17,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @SpringBootTest(classes = SongServiceApplication.class)
 @RunWith(SpringRunner.class)
@@ -26,9 +29,43 @@ public class ReadFileAndInsertData {
     @Autowired
     private SongSheetMapper songSheetMapper;
 
+    @Autowired
+    private SingerMapper singerMapper;
+
+    @Test
+    public void readSinger() {
+        String path = "D:\\coding\\singer.json";
+        File file = new File(path);
+        try(InputStreamReader inputStreamReader = new InputStreamReader(new FileInputStream(file),StandardCharsets.UTF_8)) {
+            BufferedReader bufferedReader = new BufferedReader((inputStreamReader));
+            String line = "";
+            while ((line = bufferedReader.readLine()) != null) {
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.append(line);
+                if(line.contains("}")) {
+                    stringBuilder.replace(stringBuilder.length() - 1, stringBuilder.length(), "");
+                    Singer singerObject = JSON.parseObject(stringBuilder.toString(), Singer.class);
+                    List<Long> strings = new ArrayList<>();
+                    List<Singer> singers = singerMapper.selectList(null);
+                    for (Singer singer : singers) {
+                        strings.add(singer.getSingerId());
+                    }
+                    if (strings.contains(singerObject.getSingerId())) {
+                        singerMapper.updateById(singerObject);
+                    } else {
+                        singerMapper.insert(singerObject);
+                    }
+                    stringBuilder.setLength(0);
+                }
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Test
     public void readSongs() {
-        String path = "D:\\coding\\data\\songs.json";
+        String path = "D:\\coding\\songs.json";
         File jsonFile = new File(path);
         try (InputStreamReader streamReader = new InputStreamReader(new FileInputStream(jsonFile), StandardCharsets.UTF_8)) {
             final BufferedReader bufferedReader = new BufferedReader(streamReader);

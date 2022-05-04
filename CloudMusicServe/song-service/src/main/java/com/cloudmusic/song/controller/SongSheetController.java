@@ -82,6 +82,11 @@ public class SongSheetController {
     public ResultVO addSongIntoSongSheet(@RequestParam("songSheetId") String songSheetId, @RequestParam("songId") String songId) {
         return service.addSongIntoSongSheet(songSheetId, songId);
     }
+
+    @RequestMapping("/song/getAllSongs")
+    public HashMap<String, Object> getAllSongs(@RequestBody PageInfo pageInfo) {
+        return songService.getAllSongs(pageInfo);
+    }
  }
 
 

@@ -14,6 +14,6 @@ public class CommentVO {
     //用户昵称
     private String userNickName;
     //评论时间
-    @JsonFormat(pattern = "yyyy-MM-hh")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date commentTime;
 }

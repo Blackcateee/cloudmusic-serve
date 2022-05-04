@@ -1,5 +1,6 @@
 package com.cloudmusic.feign.clients;
 
+import com.cloudmusic.feign.entity.PageInfo;
 import com.cloudmusic.feign.entity.QueryInfo;
 import com.cloudmusic.feign.entity.SongSheetVO;
 import com.cloudmusic.feign.entity.SongVO;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.HashMap;
 import java.util.List;
 
 @FeignClient("songservice")
@@ -24,4 +26,7 @@ public interface SongClients {
 
     @RequestMapping("/song/selectUserSongSheet")
     public List<SongSheetVO> selectUserSongSheet(@RequestBody List<String> songSheetId);
+
+    @RequestMapping("/song/getAllSongs")
+    public HashMap<String, Object> getAllSongs(@RequestBody PageInfo pageInfo);
 }
