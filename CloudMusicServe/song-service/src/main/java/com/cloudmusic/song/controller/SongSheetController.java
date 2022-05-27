@@ -3,20 +3,25 @@ package com.cloudmusic.song.controller;
 import com.cloudmusic.feign.entity.QueryInfo;
 import com.cloudmusic.feign.entity.SongSheetVO;
 import com.cloudmusic.feign.entity.SongVO;
+import com.cloudmusic.song.delayedTask.DeleteNoUseImage;
 import com.cloudmusic.song.entity.PageInfo;
 import com.cloudmusic.song.entity.ResultVO;
 import com.cloudmusic.song.entity.Song;
 import com.cloudmusic.song.entity.SongSheet;
 import com.cloudmusic.song.service.SongService;
 import com.cloudmusic.song.service.SongSheetService;
+import com.cloudmusic.song.util.MinioUtil;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 public class SongSheetController {
@@ -26,6 +31,12 @@ public class SongSheetController {
 
     @Resource
     private SongService songService;
+
+    @Resource
+    private MinioUtil minioUtil;
+
+    @Resource
+    private DeleteNoUseImage deleteNoUseImage;
 
     @RequestMapping("/song/listByAmount")
     public List<SongSheet> selectSongSheetByAmount() {
@@ -86,6 +97,38 @@ public class SongSheetController {
     @RequestMapping("/song/getAllSongs")
     public HashMap<String, Object> getAllSongs(@RequestBody PageInfo pageInfo) {
         return songService.getAllSongs(pageInfo);
+    }
+
+    @RequestMapping("/song/getSongInfo")
+    public Song getSongInfo(@RequestParam("songId") String songId) {
+        return songService.getSongInfo(songId);
+    }
+
+    @RequestMapping("/song/upload")
+    public String upload(MultipartFile[] file) {
+        List<String> images = minioUtil.upload(file, "images");
+        deleteNoUseImage.addItem(images.get(0));
+        return images.get(0);
+    }
+
+    @RequestMapping("/song/insertSong")
+    public ResultVO insertOrUpdateSong(@RequestBody Song song) {
+        if(Objects.isNull(song.getSongId())) {
+            return songService.insertSong(song);
+        } else  {
+            return songService.updateSong(song);
+        }
+    }
+
+    @RequestMapping("/song/uploadSong")
+    public String uploadSong(MultipartFile[] file) {
+        List<String> song = minioUtil.upload(file, "music");
+        return song.get(0);
+    }
+
+    @RequestMapping("/song/search")
+    public HashMap<String, Object> search(@RequestParam String state) {
+        return  songService.search(state);
     }
  }
 

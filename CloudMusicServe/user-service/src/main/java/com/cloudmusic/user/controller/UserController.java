@@ -1,9 +1,11 @@
 package com.cloudmusic.user.controller;
 
+import com.cloudmusic.user.entity.PageInfo;
 import com.cloudmusic.user.entity.ResultVO;
 import com.cloudmusic.user.entity.User;
 import com.cloudmusic.user.service.UserService;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -48,5 +50,25 @@ public class UserController {
     @RequestMapping("/user/addUserCollection")
     public ResultVO addUserCollection(@RequestParam("userName") String username, @RequestParam("songSheetId") String songSheetId) {
         return userService.addUserCollection(username, songSheetId);
+    }
+
+    @RequestMapping("/user/getAllUser")
+    public HashMap<String, Object> getAllUser(@RequestBody PageInfo pageInfo) {
+        return userService.getAllUser(pageInfo);
+    }
+
+    @RequestMapping("/user/uploadAvatar")
+    public String uploadAvatar(@RequestPart MultipartFile[] file) {
+        return  userService.uploadAvatar(file);
+    }
+
+    @RequestMapping("/user/updateUser")
+    public ResultVO updateUser(@RequestParam("userName") String userName, @RequestParam("nickName") String nickName, @RequestParam("userImage") String userImage) {
+        return userService.updateUser(userName, nickName, userImage);
+    }
+
+    @RequestMapping("/user/updatePassword")
+    public ResultVO updatePassword(@RequestParam("userName") String userName, @RequestParam("password") String password) {
+        return userService.updatePassword(userName, password);
     }
 }

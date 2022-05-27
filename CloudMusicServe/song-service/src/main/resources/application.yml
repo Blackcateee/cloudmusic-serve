@@ -1,5 +1,7 @@
 server:
   port: 8083
+  tomcat:
+    max-swallow-size: -1
 spring:
   application:
     name: songservice
@@ -32,3 +34,12 @@ spring:
       testWhileIdle: true
       testOnBorrow: false
       testOnReturn: false
+  servlet:
+    multipart:
+      max-file-size: -1
+      max-request-size: -1
+minio:
+  endpoint: http://121.40.137.246:9000
+  accessKey: myMinio
+  secretKey: qin1342314818
+  bucketName: cloudmusic

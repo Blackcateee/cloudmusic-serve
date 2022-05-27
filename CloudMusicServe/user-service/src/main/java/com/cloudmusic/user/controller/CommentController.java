@@ -31,4 +31,9 @@ public class CommentController {
     public HashMap<String, Object> getComment(@RequestBody PageInfo pageInfo) {
         return commentService.getComment(pageInfo);
     }
+
+    @RequestMapping("/user/getAllComment")
+    public HashMap<String, Object> getAllComment(@RequestBody PageInfo pageInfo) {
+        return commentService.getComment(pageInfo);
+    }
 }

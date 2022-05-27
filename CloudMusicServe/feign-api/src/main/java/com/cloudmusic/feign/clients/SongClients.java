@@ -29,4 +29,10 @@ public interface SongClients {
 
     @RequestMapping("/song/getAllSongs")
     public HashMap<String, Object> getAllSongs(@RequestBody PageInfo pageInfo);
+
+    @RequestMapping("/song/listAll")
+    public HashMap<String, Object> getAllSongSheet(@RequestBody PageInfo pageInfo);
+
+    @RequestMapping("/song/getAllSinger")
+    public HashMap<String, Object> getAllSinger(@RequestBody PageInfo pageInfo);
 }

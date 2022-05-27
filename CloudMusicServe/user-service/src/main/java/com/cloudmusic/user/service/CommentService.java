@@ -6,6 +6,7 @@ import com.cloudmusic.feign.entity.QueryInfo;
 import com.cloudmusic.user.entity.*;
 import com.cloudmusic.user.mapper.CommentMapper;
 import com.cloudmusic.user.mapper.UserMapper;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +25,7 @@ public class CommentService {
 
     public ResultVO insertComment(CommentDTO commentDTO) {
         Comment commentEntity = new Comment();
-        if(commentDTO.getSongId() != 0) {
+        if (commentDTO.getSongId() != 0) {
             commentEntity.setSongId(commentDTO.getSongId());
             commentEntity.setUserName(commentDTO.getUserName());
             commentEntity.setComment(commentDTO.getComment());
@@ -42,8 +43,11 @@ public class CommentService {
     }
 
     public HashMap<String, Object> getComment(PageInfo pageInfo) {
-        QueryWrapper<Comment> commentQueryWrapper = new QueryWrapper<>();
-        commentQueryWrapper.eq("song_id", pageInfo.getQuery()).or().eq("songSheet_id", pageInfo.getQuery());
+        QueryWrapper<Comment> commentQueryWrapper = null;
+        if (StringUtils.isNotBlank(pageInfo.getQuery())) {
+            commentQueryWrapper = new QueryWrapper<>();
+            commentQueryWrapper.eq("song_id", pageInfo.getQuery()).or().eq("songSheet_id", pageInfo.getQuery());
+        }
         Page<Comment> commentPage = new Page<>(pageInfo.getPageNum(), pageInfo.getPageSize());
         Page<Comment> selectPage = commentMapper.selectPage(commentPage, commentQueryWrapper);
         List<CommentVO> commentVOS = new ArrayList<>();

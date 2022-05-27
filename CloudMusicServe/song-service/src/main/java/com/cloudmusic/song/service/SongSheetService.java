@@ -69,8 +69,11 @@ public class SongSheetService {
         SongSheet songSheet = songSheetMapper.selectOne(songSheetQueryWrapper);
         songSheet.setListImg(songSheet.getListImg().replace("[\"", "").replace("\"]", ""));
         map.put("songSheet", songSheet);
-        List<String> songList = StringToListUtil.StringToList(songSheet.getListSongs());
-        List<Song> songs = songService.selectSongsInSheet(songList);
+        List<Song> songs = new ArrayList<>();
+        if (StringUtils.isNotBlank(songSheet.getListSongs())) {
+            List<String> songList = StringToListUtil.StringToList(songSheet.getListSongs());
+            songs = songService.selectSongsInSheet(songList);
+        }
         map.put("songs", songs);
         return map;
     }
