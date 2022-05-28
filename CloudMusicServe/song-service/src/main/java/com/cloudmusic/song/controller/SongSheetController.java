@@ -3,6 +3,7 @@ package com.cloudmusic.song.controller;
 import com.cloudmusic.feign.entity.QueryInfo;
 import com.cloudmusic.feign.entity.SongSheetVO;
 import com.cloudmusic.feign.entity.SongVO;
+import com.cloudmusic.feign.util.StringToListUtil;
 import com.cloudmusic.song.delayedTask.DeleteNoUseImage;
 import com.cloudmusic.song.entity.PageInfo;
 import com.cloudmusic.song.entity.ResultVO;
@@ -63,7 +64,7 @@ public class SongSheetController {
 
     @RequestMapping("/song/getDefaultSong")
     public List<SongVO> selectSongs(@RequestBody QueryInfo queryInfo) {
-        if(queryInfo.getMessage() == null) {
+        if (queryInfo.getMessage() == null) {
             return null;
         }
         return songService.selectDefaultSong(queryInfo);
@@ -85,7 +86,7 @@ public class SongSheetController {
     }
 
     @RequestMapping("/song/selectUserSongSheet")
-    public List<SongSheetVO> selectUserSongSheet(@RequestParam("songSheetIdList") List<String> songSheetIdList) {
+    public List<SongSheetVO> selectUserSongSheet(@RequestBody List<String> songSheetIdList) {
         return service.selectUserCollection(songSheetIdList);
     }
 
@@ -113,9 +114,9 @@ public class SongSheetController {
 
     @RequestMapping("/song/insertSong")
     public ResultVO insertOrUpdateSong(@RequestBody Song song) {
-        if(Objects.isNull(song.getSongId())) {
+        if (Objects.isNull(song.getSongId())) {
             return songService.insertSong(song);
-        } else  {
+        } else {
             return songService.updateSong(song);
         }
     }
@@ -128,8 +129,28 @@ public class SongSheetController {
 
     @RequestMapping("/song/search")
     public HashMap<String, Object> search(@RequestParam String state) {
-        return  songService.search(state);
+        return songService.search(state);
     }
- }
+
+    @RequestMapping("/song/selectSongsInSheet")
+    public List<Song> selectSongsInSheet(@RequestParam String songList) {
+        List<String> songIdList = StringToListUtil.StringToList(songList);
+        return songService.selectSongsInSheet(songIdList);
+    }
+
+    @RequestMapping("/song/insertSongSheet")
+    public ResultVO insertSongSheet(@RequestBody SongSheet songSheet) {
+        if (Objects.isNull(songSheet.getListId())) {
+            return service.insertSongSheet(songSheet);
+        } else {
+            return service.updateSongSheet(songSheet);
+        }
+    }
+
+    @RequestMapping("/song/searchSongSheetByTags")
+    public List<SongSheet> searchSongSheetByTags(@RequestParam("tags") String tags) {
+        return service.searchSongSheetByTags(tags);
+    }
+}
 
 

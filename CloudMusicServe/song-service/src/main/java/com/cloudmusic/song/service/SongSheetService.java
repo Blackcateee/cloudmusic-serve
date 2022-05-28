@@ -1,5 +1,6 @@
 package com.cloudmusic.song.service;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -12,9 +13,18 @@ import com.cloudmusic.song.entity.SongSheet;
 import com.cloudmusic.song.mapper.SongSheetMapper;
 import com.cloudmusic.song.util.SongToSongVo;
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.HttpHost;
+import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.RestClient;
+import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.SearchHit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -32,6 +42,8 @@ public class SongSheetService {
 
     @Autowired
     private SongToSongVo songToSongVo;
+
+    private final RestHighLevelClient client = new RestHighLevelClient(RestClient.builder(HttpHost.create("http://121.40.137.246:9200")));
 
     //根据歌单播放量排序返回
     public List<SongSheet> selectSongSheetByAmount() {
@@ -53,8 +65,13 @@ public class SongSheetService {
     }
 
     public Page<SongSheet> selectSongSheetAll(PageInfo pageInfo) {
+        QueryWrapper<SongSheet> songSheetQueryWrapper = null;
+        if(StringUtils.isNotBlank(pageInfo.getQuery())) {
+            songSheetQueryWrapper = new QueryWrapper<>();
+            songSheetQueryWrapper.like("list_title", pageInfo.getQuery());
+        }
         Page<SongSheet> page = new Page<>(pageInfo.getPageNum(), pageInfo.getPageSize());
-        Page<SongSheet> songSheetPage = songSheetMapper.selectPage(page, null);
+        Page<SongSheet> songSheetPage = songSheetMapper.selectPage(page, songSheetQueryWrapper);
         for (SongSheet songSheet : songSheetPage.getRecords()) {
             songSheet.setListImg(songSheet.getListImg().replace("[\"", "").replace("\"]", ""));
         }
@@ -75,6 +92,7 @@ public class SongSheetService {
             songs = songService.selectSongsInSheet(songList);
         }
         map.put("songs", songs);
+        map.put("songSheet", songSheet);
         return map;
     }
 
@@ -134,6 +152,38 @@ public class SongSheetService {
             songSheet.setListSongs(songId);
             songSheetMapper.updateById(songSheet);
             return ResultVO.builder().message("添加成功").success(true).build();
+        }
+    }
+
+    public ResultVO insertSongSheet(SongSheet songSheet) {
+        songSheet.setListId(null);
+        songSheetMapper.insert(songSheet);
+        return ResultVO.builder().message("添加成功").success(true).build();
+    }
+
+    public ResultVO updateSongSheet(SongSheet songSheet) {
+        songSheetMapper.updateById(songSheet);
+        return ResultVO.builder().message("修改成功").success(true).build();
+    }
+
+    public List<SongSheet> searchSongSheetByTags(String tags) {
+
+        List<SongSheet> songSheets = new ArrayList<>();
+        SearchRequest searchRequest = new SearchRequest("songsheet");
+
+        searchRequest.source().query(QueryBuilders.matchQuery("listTags", tags));
+
+        try {
+            SearchResponse search = client.search(searchRequest, RequestOptions.DEFAULT);
+            for (SearchHit hit : search.getHits().getHits()) {
+                String sourceAsString = hit.getSourceAsString();
+                SongSheet songSheet = JSON.parseObject(sourceAsString, SongSheet.class);
+                songSheets.add(songSheet);
+            }
+            return songSheets;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }

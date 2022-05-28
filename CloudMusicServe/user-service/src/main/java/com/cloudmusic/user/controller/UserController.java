@@ -1,5 +1,6 @@
 package com.cloudmusic.user.controller;
 
+import com.cloudmusic.feign.entity.SongSheetVO;
 import com.cloudmusic.user.entity.PageInfo;
 import com.cloudmusic.user.entity.ResultVO;
 import com.cloudmusic.user.entity.User;
@@ -9,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
+import java.util.List;
 
 @RestController
 @CrossOrigin
@@ -70,5 +72,10 @@ public class UserController {
     @RequestMapping("/user/updatePassword")
     public ResultVO updatePassword(@RequestParam("userName") String userName, @RequestParam("password") String password) {
         return userService.updatePassword(userName, password);
+    }
+
+    @RequestMapping("/user/searchLikelySongSheet")
+    public List<SongSheetVO> searchLikelySongSheet(@RequestParam("userName") String userName) {
+        return userService.searchLikelySongSheet(userName);
     }
 }

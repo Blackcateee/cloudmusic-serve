@@ -35,4 +35,7 @@ public interface SongClients {
 
     @RequestMapping("/song/getAllSinger")
     public HashMap<String, Object> getAllSinger(@RequestBody PageInfo pageInfo);
+
+    @RequestMapping("/song/searchSongSheetByTags")
+    public List<SongSheetVO> searchSongSheetByTags(@RequestParam("tags") String tags);
 }

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cloudmusic.feign.clients.SongClients;
 import com.cloudmusic.feign.entity.QueryInfo;
+import com.cloudmusic.feign.entity.SongSheetVO;
 import com.cloudmusic.feign.entity.SongVO;
 import com.cloudmusic.feign.util.StringToListUtil;
 import com.cloudmusic.user.delayedTask.DeleteNoUseImage;
@@ -187,5 +188,27 @@ public class UserService {
             return ResultVO.builder().success(true).message("修改成功").build();
         }
         return ResultVO.builder().success(false).message("用户不存在").build();
+    }
+
+    public List<SongSheetVO> searchLikelySongSheet(String userName) {
+        if (StringUtils.isEmpty(userName)) {
+            return null;
+        }
+        QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
+        userQueryWrapper.eq("user_name", userName);
+        User user = userMapper.selectOne(userQueryWrapper);
+        ArrayList<String> songSheetIdList = new ArrayList<>(Arrays.asList(user.getUserCollection().split(",")));
+        List<SongSheetVO> songSheetVOS = songClients.selectUserSongSheet(songSheetIdList);
+
+        LinkedList<String> stringList = new LinkedList<>();
+        for (SongSheetVO songSheetVO : songSheetVOS) {
+            List<String> strings = StringToListUtil.StringToList(songSheetVO.getListTags());
+            for (String string : strings) {
+                if(!stringList.contains(string)) {
+                    stringList.add(string);
+                }
+            }
+        }
+        return songClients.searchSongSheetByTags(stringList.toString());
     }
 }
